@@ -49,7 +49,7 @@ namespace MetOblProj1
                 Console.Write("Czy dodać kolejny węzeł? (T/N): ");
 
                 char wybor = Console.ReadKey().KeyChar;
-                if ((wybor ^ 0x20) == 'T')
+                if ((wybor & 0xDF) == 'T')
                     podajXY(1);
                 else
                     break;
@@ -92,14 +92,19 @@ namespace MetOblProj1
 
             for (int i = 0; i < n; i++)
             {
-                try
+                while (true)
                 {
-                    Console.Write("Podaj y{0}: ", i);
-                    y.Add(Convert.ToInt32(Console.ReadLine()));
-                }
-                catch (FormatException e)
-                {
-                    Console.WriteLine("Podano błędnie sformatowaną liczbę, spróbuj ponownie.");
+                    try
+                    {
+                        Console.Write("Podaj y{0}: ", i);
+                        y.Add(Convert.ToInt32(Console.ReadLine()));
+
+                        break;
+                    }
+                    catch (FormatException e)
+                    {
+                        Console.WriteLine("Podano błędnie sformatowaną liczbę, spróbuj ponownie.");
+                    }
                 }
             }
         }
@@ -139,11 +144,12 @@ namespace MetOblProj1
 
             for (int i = 0; i < x.Count; i++)
             {
-                if(b[i] > 0)
+                if (i > 0) postacNewtona += " + ";
+
+                if(b[i] >= 0)
                     postacNewtona += b[i] + niewiadome(i);
                 else if (b[i] < 0)
                     postacNewtona += "(" + b[i] + ")" + niewiadome(i);
-                if (i < x.Count) postacNewtona += " + ";
             }
         }
 
