@@ -63,18 +63,18 @@ namespace MetOblProj1
                     double wBezwzgledna = Math.Abs(c.Wielkosc);
 
                     if (sbNiePusty || czyUjemny)
-                        sb.Append(czyUjemny ? "-" : "+");
+                        sb.Append(czyUjemny ? " - " : " + ");
                     if (c.CzyZmienna)
                     {
                         if (wBezwzgledna != 1.0)
-                            sb.Append(wBezwzgledna);
+                            sb.Append(Math.Round(wBezwzgledna, 4));
 
                         sb.Append("x");
 
                         if (c.Wykladnik != 1.0)
                             sb.AppendFormat("^{0}", c.Wykladnik);
                     }
-                    else sb.Append(wBezwzgledna);
+                    else sb.Append(Math.Round(wBezwzgledna, 4));
 
                     sbNiePusty = true;
                 }

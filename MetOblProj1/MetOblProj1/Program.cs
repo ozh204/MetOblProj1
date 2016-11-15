@@ -10,9 +10,9 @@ namespace MetOblProj1
     {
         private static string postacNewtona;
         private static Nawias postacOgolna;
-        private static List<int> x = new List<int>();
-        private static List<int> y = new List<int>();
-        private static int[] b;
+        private static List<double> x = new List<double>();
+        private static List<double> y = new List<double>();
+        private static double[] b;
 
         public static void Main()
         {
@@ -41,7 +41,7 @@ namespace MetOblProj1
             {
                 obliczB();
                 utworzNewtona();
-                Console.WriteLine("Postać newtona:\n" + postacNewtona);
+                Console.WriteLine("Postać Newtona:\n" + postacNewtona);
                 utworzOgolna();
                 Console.WriteLine("Postać ogólna:\n" + postacOgolna);
 
@@ -59,6 +59,8 @@ namespace MetOblProj1
 
         public static void podajXY(int n)
         {
+            int indeksStartowy = x.Count;
+
             Console.WriteLine();
 
             for (int i = 0; i < n; i++)
@@ -67,39 +69,26 @@ namespace MetOblProj1
                 {
                     try
                     {
-                        Console.Write("Podaj x{0}: ", i);
-                        int wezelX = Convert.ToInt32(Console.ReadLine());
+                        Console.Write("Podaj x{0}: ", i + indeksStartowy);
+                        double wezelX = Convert.ToDouble(Console.ReadLine());
 
-                        if (x.Contains(wezelX) == false)
+                        Console.Write("Podaj y{0}: ", i + indeksStartowy);
+                        double wartoscY = Convert.ToDouble(Console.ReadLine());
+
+                        if (x.IndexOf(wezelX) == (-1))
                         {
-                            if (x.Count == 0 || x.Last() < wezelX)
+                            int punktWstawiania = 0;
+
+                            for (; punktWstawiania < x.Count; punktWstawiania++)
                             {
-                                x.Add(wezelX);
-                                break;                                          // wyjdz z petli while(true)
+                                if (x[punktWstawiania] > wezelX) break;
                             }
-                            else Console.WriteLine("Dodawany węzeł musi być większy od ostatniego ({0}), spróbuj ponownie.", x.Last());
+
+                            x.Insert(punktWstawiania, wezelX);
+                            y.Insert(punktWstawiania, wartoscY);
+                            break;                                          // wyjdz z petli while(true)
                         }
                         else Console.WriteLine("Węzeł {0} został już podany, spróbuj ponownie.", wezelX);
-                    }
-                    catch (FormatException e)
-                    {
-                        Console.WriteLine("Podano błędnie sformatowaną liczbę, spróbuj ponownie.");
-                    }
-                }
-            }
-
-            Console.WriteLine();
-
-            for (int i = 0; i < n; i++)
-            {
-                while (true)
-                {
-                    try
-                    {
-                        Console.Write("Podaj y{0}: ", i);
-                        y.Add(Convert.ToInt32(Console.ReadLine()));
-
-                        break;
                     }
                     catch (FormatException e)
                     {
@@ -111,24 +100,28 @@ namespace MetOblProj1
 
         public static void obliczB()
         {
-            b = new int[x.Count];
+            Console.WriteLine("Współczynniki b_n:");
+
+            b = new double[x.Count];
 
             for (int i = 0; i < x.Count; i++)
             {
                 b[i] = Iloraz(x, y, 0, i);
-                Console.WriteLine("b_{0} = {1}", i, b[i]);
+                Console.WriteLine("\tb_{0} = {1}", i, Math.Round(b[i], 4));
             }
+
+            Console.Write("\r\n");
         }
 
-        public static int Iloraz(List<int> X, List<int> Y, int i, int n)
+        public static double Iloraz(List<double> X, List<double> Y, int i, int n)
         {
             if (n >= 2)
             {
                 // NIE przenosić poza funkcję - to jest funkcja
                 // REKURENCYJNA - kolejne wywołania nadpiszą
                 // ilorazH i ilorazL!
-                int ilorazH = Iloraz(X, Y, i + 1, n - 1);
-                int ilorazL = Iloraz(X, Y, i, n - 1);
+                double ilorazH = Iloraz(X, Y, i + 1, n - 1);
+                double ilorazL = Iloraz(X, Y, i, n - 1);
 
                 return (ilorazH - ilorazL) / (X[i + n] - X[i]);
             }
@@ -140,16 +133,14 @@ namespace MetOblProj1
 
         public static void utworzNewtona()
         {
-            postacNewtona = "";
-
             for (int i = 0; i < x.Count; i++)
             {
-                if (i > 0) postacNewtona += " + ";
+                if (i > 0) postacNewtona += " +\r\n";
 
                 if(b[i] >= 0)
-                    postacNewtona += b[i] + niewiadome(i);
+                    postacNewtona += Math.Round(b[i], 4) + niewiadome(i);
                 else if (b[i] < 0)
-                    postacNewtona += "(" + b[i] + ")" + niewiadome(i);
+                    postacNewtona += "(" + Math.Round(b[i], 4) + ")" + niewiadome(i);
             }
         }
 
@@ -160,9 +151,9 @@ namespace MetOblProj1
             for(int j=0; j < i;j++)
             {
                 if(x[j] > 0)
-                    tmp += "(x-"+ x[j] + ")";
+                    tmp += "(x-"+ Math.Round(x[j], 4) + ")";
                 else if(x[j] < 0)
-                    tmp += "(x-(" + x[j] + "))";
+                    tmp += "(x-(" + Math.Round(x[j], 4) + "))";
             }
             return tmp;
         }
